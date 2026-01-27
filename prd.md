@@ -1,6 +1,14 @@
-# CashBook Onboarding Waitlist Page - Build Prompt
+# CashBook Onboarding Waitlist Page - Project Context
 
-You are a Senior Full-Stack Engineer. Build a high-conversion, mobile-responsive onboarding waitlist page for **CashBook** - a UPI wallet for Business Expenses.
+This document provides context for building a high-conversion onboarding waitlist page for **CashBook** - a UPI wallet for Business Expenses.
+
+## Critical: Mobile-First Design
+
+**The majority of users will access this onboarding page on mobile devices.** All design decisions must prioritize mobile experience:
+- Design for mobile first, then adapt for desktop
+- Ensure touch-friendly interactions (large tap targets, adequate spacing)
+- Optimize for one-handed mobile usage
+- Test all features on mobile viewports before desktop
 
 ---
 
@@ -65,6 +73,32 @@ Error:             #cc0100  → Validation errors
 
 ## 3. Page Structure & Flow
 
+### Overview
+
+The onboarding page follows a 3-section flow designed for maximum conversion:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  SECTION 1: Feature Showcase (Lottie Animation)         │
+│  → Shows product value, builds interest                 │
+│  → CTA: "Join the Waitlist"                            │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│  SECTION 2: Testimonials (Social Proof)                 │
+│  → Real customer quotes from YoloBus, Janitri, etc.    │
+│  → Builds trust before asking for information          │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│  SECTION 3: Multi-Step Form (4 steps, 1 field each)    │
+│  Step 1: Name → Step 2: Phone → Step 3: Business Type  │
+│  → Step 4: Turnover → Success!                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
 ### Step 1: Feature Showcase (Lottie Animation)
 
 **IMPORTANT:** Before showing the onboarding form, display an animated product walkthrough.
@@ -84,39 +118,163 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 <DotLottieReact src="/lottie/IssueWallet.lottie" loop autoplay />;
 ```
 
-### Step 2: Onboarding Form
+### Step 2: Testimonials Section (Social Proof)
 
-After the user clicks the CTA, transition (smooth scroll or page transition) to the waitlist form:
+**IMPORTANT:** Display customer testimonials to build trust and increase conversion before the form.
 
-#### Form Layout
+#### Layout (Mobile-First)
+- **Mobile (default):** Horizontal scrollable carousel with snap points for smooth swiping
+- **Desktop:** Grid layout (2 columns)
+- Each testimonial card includes:
+  - Company logo or initials placeholder
+  - Customer quote
+  - Customer name
+  - Title & Company name
 
-- Centered card UI with subtle shadow
-- Clean, minimal design following CashBook branding
-- Large touch targets (minimum 48px height) for mobile-friendliness
-- Progress indicator if using multi-step form (optional)
+#### Testimonials Data
 
-#### Form Fields
+```typescript
+const testimonials = [
+  {
+    id: 1,
+    name: "Sanjay Jadoun",
+    title: "Founder",
+    company: "YoloBus",
+    quote: "We were losing money to cash leaks with no real-time spending data. CashBook channels fuel and toll payments through manager wallets, letting us track spend per kilometre. We've cut waste by 30% and plugged leaks fast with auditable digital payments."
+  },
+  {
+    id: 2,
+    name: "Arun Agarwal",
+    title: "Founder",
+    company: "Janitri",
+    quote: "In our clinical trials, administrative work is a distraction. CashBook lets our clinicians buy consumables via UPI while finance auto-tags each cost to the right study. Our admin time is halved, so we stay focused on protecting mothers and babies, not chasing receipts."
+  },
+  {
+    id: 3,
+    name: "Suchita Choudhury",
+    title: "CEO",
+    company: "ISIT",
+    quote: "CashBook UPI lets our site teams scan a QR and pay carpenters or suppliers in seconds. Every receipt lands on our dashboard, so finance and project leads see all spending as it happens. It has meant faster payouts and much cleaner books for us."
+  },
+  {
+    id: 4,
+    name: "Yagyarth Srivastava",
+    title: "HR Lead",
+    company: "Zingbus",
+    quote: "Our route managers need to pay for hotels and supplies on the go. CashBook UPI puts spending power in their hands, and our finance team sees every rupee live. Reconciliation that took days now takes just minutes, keeping our buses rolling."
+  }
+];
+```
 
-| Field           | Type         | Validation                      | Notes                               |
-| --------------- | ------------ | ------------------------------- | ----------------------------------- |
-| Full Name       | Text input   | Required, min 2 chars           | Placeholder: "Enter your full name" |
-| Phone Number    | Tel input    | Required, +91 prefix, 10 digits | Auto-prefix with +91, numeric only  |
-| Business Type   | Radio/Select | Required                        | See options below                   |
-| Annual Turnover | Radio/Select | Required                        | See options below                   |
+#### Testimonial Card Styling
+- Background: White (#ffffff)
+- Border radius: 12px
+- Shadow: `0 2px 12px rgba(0, 0, 0, 0.08)`
+- Padding: 24px
+- Quote text: #333333, font-style italic, line-height 1.6
+- Quote icon: Large opening quote mark in #e6eefd (primary light)
+- Name: #333333, font-weight 600
+- Title & Company: #666666, font-size smaller
 
-**Business Type Options:**
+---
 
-- Sole Proprietorship
-- LLP / Partnership
-- Private Limited
-- Unregistered Business
+### Step 3: Multi-Step Onboarding Form
 
-**Annual Turnover Options:**
+**IMPORTANT:** Use a step-by-step wizard approach - ONE field per step for higher completion rates.
 
-- Less than ₹50 Lakhs
-- ₹50 Lakhs - ₹2 Crores
-- ₹2 Crores - ₹5 Crores
-- Above ₹5 Crores
+After testimonials, the user proceeds to a multi-step form wizard:
+
+#### Form Structure (4 Steps)
+
+```
+Step 1 → Step 2 → Step 3 → Step 4 → Success
+[Name]   [Phone]  [Business] [Turnover]  [Done!]
+```
+
+#### Progress Indicator
+- Display step progress at the top: "Step 1 of 4"
+- Visual progress bar showing completion percentage
+- Steps should be numbered with current step highlighted in primary blue
+
+#### Step 1: Full Name
+- Large, friendly heading: "Let's get started! What's your name?"
+- Single text input field
+- Placeholder: "Enter your full name"
+- Validation: Required, minimum 2 characters
+- Button: "Continue" →
+
+#### Step 2: Phone Number
+- Heading: "Great, {name}! What's your phone number?"
+- Phone input with +91 prefix (auto-filled, non-editable)
+- Only allow 10 digits after prefix
+- Validation: Required, exactly 10 digits
+- Button: "Continue" →
+- Back button: ← "Back"
+
+#### Step 3: Business Type
+- Heading: "What type of business do you run?"
+- Display as large, tappable cards (not dropdown)
+- One selection required
+- Options displayed as selectable cards:
+
+| Option | Icon (lucide-react) |
+|--------|---------------------|
+| Sole Proprietorship | `User` |
+| LLP / Partnership | `Users` |
+| Private Limited | `Building2` |
+| Unregistered Business | `Store` |
+
+- Button: "Continue" →
+- Back button: ← "Back"
+
+#### Step 4: Annual Turnover
+- Heading: "What's your annual business turnover?"
+- Display as large, tappable cards
+- One selection required
+- Options displayed as selectable cards:
+
+| Option | Description |
+|--------|-------------|
+| Less than ₹50 Lakhs | "Small business" |
+| ₹50 Lakhs - ₹2 Crores | "Growing business" |
+| ₹2 Crores - ₹5 Crores | "Established business" |
+| Above ₹5 Crores | "Large enterprise" |
+
+- Button: "Join Waitlist" (Primary CTA, submit form)
+- Back button: ← "Back"
+
+#### Step Navigation Logic
+```typescript
+// Form state management
+interface FormState {
+  currentStep: 1 | 2 | 3 | 4;
+  data: {
+    name: string;
+    phone: string;
+    businessType: string | null;
+    turnoverRange: string | null;
+  };
+  errors: Record<string, string>;
+}
+
+// Only allow forward navigation if current step is valid
+// Allow backward navigation anytime
+// Submit only on final step
+```
+
+#### Animation Between Steps
+- Use smooth slide transitions (left/right)
+- Fade in/out for content
+- Consider using Framer Motion or CSS transitions
+
+#### Selection Card Styling
+- Unselected: White background, #e5e5e5 border
+- Selected: #e6eefd background, #0154e9 border (2px)
+- Hover (desktop): Slight scale (1.02) and shadow increase
+- Active/Tap (mobile): Brief scale animation for feedback
+- Icon color: #0154e9 when selected, #666666 when unselected
+- Minimum height: 56px for easy mobile tapping
+- Full-width cards on mobile, stacked vertically
 
 ---
 
@@ -215,11 +373,13 @@ export async function submitWaitlist(formData: FormData) {
 
 ### Input Styling
 
-- Height: 48px minimum
+- Height: 48px minimum (ensures touch-friendly target on mobile)
 - Border: 1px solid #e5e5e5
 - Border radius: 8px
 - Focus state: Border color #0154e9, subtle shadow
 - Error state: Border color #cc0100, error message below
+- Font size: 16px minimum (prevents auto-zoom on iOS)
+- Use appropriate input types (tel for phone, text for name) for mobile keyboards
 
 ### Button Styling
 
@@ -240,20 +400,26 @@ After successful submission:
 
 ---
 
-## 7. Responsive Design
+## 7. Responsive Design (Mobile-First)
+
+**IMPORTANT:** Most users will access this page on mobile. Build mobile-first, then enhance for desktop.
 
 ### Breakpoints
 
-- Mobile: < 810px
+- Mobile (default): < 810px - **Primary target**
 - Desktop: ≥ 810px
 
-### Mobile Considerations
+### Mobile-First Requirements
 
-- Single column layout
-- Full-width inputs and buttons
-- Touch-friendly spacing (min 8px between interactive elements)
-- Lottie animation scales appropriately
-- Form fits within viewport without horizontal scroll
+- **Single column layout** - optimized for vertical scrolling
+- **Full-width inputs and buttons** - easy to tap with thumb
+- **Large touch targets** - minimum 44px height for all interactive elements
+- **Touch-friendly spacing** - minimum 12px between interactive elements
+- **Thumb-zone friendly** - place primary actions within easy thumb reach
+- **Lottie animation** - scales appropriately, doesn't slow down mobile devices
+- **Form fits within viewport** - no horizontal scroll
+- **Fast loading** - optimize assets for mobile networks
+- **Readable text** - minimum 16px font size for body text (prevents iOS zoom on input focus)
 
 ---
 
@@ -263,15 +429,22 @@ Create the following files:
 
 1. **`db/schema.ts`** - Drizzle schema with enums and waitlist table
 2. **`app/actions/waitlist.ts`** - Server Action with Zod validation
-3. **`app/page.tsx`** - Main page component with:
-   - Feature showcase section with Lottie
-   - Onboarding form section
-   - Success state
+3. **`app/page.tsx`** - Main page component orchestrating all sections
 4. **`components/`** - Reusable components:
-   - `FeatureShowcase.tsx` - Lottie animation section
-   - `WaitlistForm.tsx` - Form component
-   - `SuccessMessage.tsx` - Post-submission state
+   - `FeatureShowcase.tsx` - Lottie animation hero section
+   - `Testimonials.tsx` - Customer testimonials carousel/grid
+   - `TestimonialCard.tsx` - Individual testimonial card
+   - `MultiStepForm.tsx` - Form wizard container with state management
+   - `FormSteps/`
+     - `StepName.tsx` - Step 1: Name input
+     - `StepPhone.tsx` - Step 2: Phone input
+     - `StepBusinessType.tsx` - Step 3: Business type selection
+     - `StepTurnover.tsx` - Step 4: Turnover selection
+   - `ProgressBar.tsx` - Step progress indicator
+   - `SelectionCard.tsx` - Reusable selectable card component
+   - `SuccessMessage.tsx` - Post-submission success state
 5. **`tailwind.config.ts`** - Extended with CashBook brand theme
+6. **`lib/testimonials.ts`** - Testimonials data
 
 ---
 
@@ -290,22 +463,37 @@ Create the following files:
 
 ```
 /branding
-  /assets          → Logo files (add manually)
+  /assets              → Logo files (add manually)
   brand-config.json
   brand-constants.ts
   brand-variables.css
   tailwind-brand.js
 
 /lottie
-  IssueWallet.lottie → Feature showcase animation
+  IssueWallet.lottie   → Feature showcase animation
 
 /db
-  schema.ts        → [CREATE] Drizzle schema
+  schema.ts            → [CREATE] Drizzle schema
+
+/lib
+  testimonials.ts      → [CREATE] Testimonials data
 
 /app
-  page.tsx         → [CREATE] Main page
+  page.tsx             → [CREATE] Main page
   /actions
-    waitlist.ts    → [CREATE] Server action
+    waitlist.ts        → [CREATE] Server action
 
-/components        → [CREATE] UI components
+/components
+  FeatureShowcase.tsx  → [CREATE] Lottie hero section
+  Testimonials.tsx     → [CREATE] Testimonials section
+  TestimonialCard.tsx  → [CREATE] Single testimonial card
+  MultiStepForm.tsx    → [CREATE] Form wizard container
+  ProgressBar.tsx      → [CREATE] Step progress indicator
+  SelectionCard.tsx    → [CREATE] Selectable option card
+  SuccessMessage.tsx   → [CREATE] Success state
+  /FormSteps
+    StepName.tsx       → [CREATE] Step 1
+    StepPhone.tsx      → [CREATE] Step 2
+    StepBusinessType.tsx → [CREATE] Step 3
+    StepTurnover.tsx   → [CREATE] Step 4
 ```

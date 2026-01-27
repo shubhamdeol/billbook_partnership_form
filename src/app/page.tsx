@@ -1,45 +1,33 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { FeatureShowcase } from "@/components/FeatureShowcase";
-import { WaitlistForm } from "@/components/WaitlistForm";
+import { Testimonials } from "@/components/Testimonials";
+import { MultiStepForm } from "@/components/MultiStepForm";
 
 export default function Home() {
-  const formSectionRef = useRef<HTMLElement>(null);
-  const [showForm, setShowForm] = useState(false);
+  const testimonialsRef = useRef<HTMLDivElement>(null);
 
   const handleGetStarted = () => {
-    setShowForm(true);
-    setTimeout(() => {
-      formSectionRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
+    testimonialsRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <main>
+      {/* Section 1: Feature Showcase */}
       <FeatureShowcase onGetStarted={handleGetStarted} />
 
-      {showForm && (
-        <section
-          ref={formSectionRef}
-          className="min-h-screen flex items-center justify-center px-4 py-16 bg-background"
-        >
-          <div className="w-full max-w-lg">
-            <div className="bg-white rounded-xl shadow-card p-8 md:p-10">
-              <div className="text-center mb-8">
-                <h2 className="font-display text-2xl md:text-3xl font-bold text-text mb-2">
-                  Join the Waitlist
-                </h2>
-                <p className="text-text-secondary">
-                  Be among the first to experience CashBook
-                </p>
-              </div>
+      {/* Section 2: Testimonials */}
+      <div ref={testimonialsRef}>
+        <Testimonials />
+      </div>
 
-              <WaitlistForm />
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Section 3: Multi-Step Form */}
+      <section className="min-h-screen flex items-center justify-center px-4 py-16 bg-background">
+        <div className="w-full max-w-lg">
+          <MultiStepForm />
+        </div>
+      </section>
     </main>
   );
 }
