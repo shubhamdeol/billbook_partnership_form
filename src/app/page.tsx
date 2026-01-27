@@ -1,31 +1,25 @@
-"use client";
-
-import { useRef } from "react";
-import { FeatureShowcase } from "@/components/FeatureShowcase";
+import Link from "next/link";
+import { HeroSection } from "@/components/HeroSection";
 import { Testimonials } from "@/components/Testimonials";
-import { MultiStepForm } from "@/components/MultiStepForm";
 
 export default function Home() {
-  const testimonialsRef = useRef<HTMLDivElement>(null);
-
-  const handleGetStarted = () => {
-    testimonialsRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <main>
-      {/* Section 1: Feature Showcase */}
-      <FeatureShowcase onGetStarted={handleGetStarted} />
+    <main className="min-h-screen flex flex-col bg-background">
+      {/* Hero Section with Lottie */}
+      <HeroSection />
 
-      {/* Section 2: Testimonials */}
-      <div ref={testimonialsRef}>
-        <Testimonials />
-      </div>
+      {/* Testimonials Section */}
+      <Testimonials />
 
-      {/* Section 3: Multi-Step Form */}
-      <section className="min-h-screen flex items-center justify-center px-4 py-16 bg-background">
-        <div className="w-full max-w-lg">
-          <MultiStepForm />
+      {/* CTA Section */}
+      <section className="py-8 px-6 bg-background sticky bottom-0 border-t border-border/50 backdrop-blur-sm bg-background/95">
+        <div className="max-w-lg mx-auto">
+          <Link
+            href="/waitlist"
+            className="block w-full bg-primary hover:bg-primary/90 text-white font-semibold text-lg py-4 rounded-lg transition-colors duration-200 shadow-card active:scale-[0.98] text-center"
+          >
+            Join the Waitlist
+          </Link>
         </div>
       </section>
     </main>

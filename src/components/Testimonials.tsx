@@ -5,14 +5,13 @@ import { TestimonialCard } from "./TestimonialCard";
 
 export function Testimonials() {
   return (
-    <section className="py-16 px-4 bg-background-alt">
+    <section className="py-8 md:py-12 px-4 bg-background-alt">
       <div className="max-w-4xl mx-auto">
-        <h2 className="font-display text-2xl md:text-3xl font-bold text-text text-center mb-3">
+        <h2 className="font-display text-xl md:text-2xl font-bold text-text text-center mb-2">
           Trusted by Growing Businesses
         </h2>
-        <p className="text-text-secondary text-center mb-10 max-w-md mx-auto">
-          See how companies are transforming their expense management with
-          CashBook
+        <p className="text-sm md:text-base text-text-secondary text-center mb-6 max-w-md mx-auto">
+          See how companies are transforming their expense management
         </p>
 
         {/* Mobile: Horizontal scroll with snap points for smooth swiping */}
