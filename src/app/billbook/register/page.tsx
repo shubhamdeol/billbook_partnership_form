@@ -14,7 +14,7 @@ export default function WaitlistPage() {
       {/* Header */}
       <header className="px-4 py-4 flex items-center justify-between max-w-lg mx-auto">
         <Link
-          href="/"
+          href="/billbook"
           className="flex items-center gap-2 text-text-secondary hover:text-text transition-colors min-h-[44px] px-2 -ml-2"
         >
           <ArrowLeft className="w-5 h-5" />

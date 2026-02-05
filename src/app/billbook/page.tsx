@@ -26,7 +26,7 @@ export default function Home() {
       >
         <div className="max-w-lg mx-auto">
           <Link
-            href="/register"
+            href="/billbook/register"
             className="block w-full bg-primary hover:bg-primary/90 text-white font-semibold text-base py-4 rounded-xl transition-colors duration-200 shadow-lg active:scale-[0.98] text-center"
           >
             Request UPI Wallet
