@@ -113,25 +113,20 @@ export function AdminDashboard() {
   const handleExport = async () => {
     setIsExporting(true);
     try {
+      const XLSX = await import("xlsx");
       const allEntries = await getAllWaitlistEntries();
-      const header = ["ID", "Name", "Phone", "Business Type", "Turnover Range", "Submitted"];
-      const rows = allEntries.map((entry) => [
-        entry.id,
-        `"${entry.name.replace(/"/g, '""')}"`,
-        entry.phone,
-        BUSINESS_TYPE_LABELS[entry.businessType] || entry.businessType,
-        TURNOVER_LABELS[entry.turnoverRange] || entry.turnoverRange,
-        new Date(entry.createdAt).toISOString(),
-      ]);
-      const csv = [header.join(","), ...rows.map((r) => r.join(","))].join("\n");
-      const BOM = "\uFEFF";
-      const blob = new Blob([BOM + csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `waitlist-export-${new Date().toISOString().slice(0, 10)}.csv`;
-      link.click();
-      URL.revokeObjectURL(url);
+      const data = allEntries.map((entry) => ({
+        ID: entry.id,
+        Name: entry.name,
+        Phone: entry.phone,
+        "Business Type": BUSINESS_TYPE_LABELS[entry.businessType] || entry.businessType,
+        "Turnover Range": TURNOVER_LABELS[entry.turnoverRange] || entry.turnoverRange,
+        Submitted: new Date(entry.createdAt).toLocaleString("en-IN"),
+      }));
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Waitlist");
+      XLSX.writeFile(wb, `waitlist-export-${new Date().toISOString().slice(0, 10)}.xlsx`);
     } catch (error) {
       console.error("Export failed:", error);
     } finally {
@@ -162,7 +157,7 @@ export function AdminDashboard() {
                 disabled={isExporting}
                 className="text-sm text-primary hover:text-primary/80 transition-colors disabled:opacity-50"
               >
-                {isExporting ? "Exporting..." : "Export CSV"}
+                {isExporting ? "Exporting..." : "Export Excel"}
               </button>
               <form action={logoutAction}>
                 <button
