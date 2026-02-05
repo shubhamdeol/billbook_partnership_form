@@ -5,6 +5,7 @@ import Image from "next/image";
 import {
   getWaitlistEntries,
   getWaitlistStats,
+  getAllWaitlistEntries,
   logoutAction,
   type BusinessType,
   type TurnoverRange,
@@ -49,6 +50,7 @@ export function AdminDashboard() {
   const [businessType, setBusinessType] = useState<BusinessType | "">("");
   const [turnoverRange, setTurnoverRange] = useState<TurnoverRange | "">("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
   const [stats, setStats] = useState<{
     total: number;
     byBusinessType: Record<string, number>;
@@ -108,6 +110,35 @@ export function AdminDashboard() {
     setCurrentPage(1);
   };
 
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      const allEntries = await getAllWaitlistEntries();
+      const header = ["ID", "Name", "Phone", "Business Type", "Turnover Range", "Submitted"];
+      const rows = allEntries.map((entry) => [
+        entry.id,
+        `"${entry.name.replace(/"/g, '""')}"`,
+        entry.phone,
+        BUSINESS_TYPE_LABELS[entry.businessType] || entry.businessType,
+        TURNOVER_LABELS[entry.turnoverRange] || entry.turnoverRange,
+        new Date(entry.createdAt).toISOString(),
+      ]);
+      const csv = [header.join(","), ...rows.map((r) => r.join(","))].join("\n");
+      const BOM = "\uFEFF";
+      const blob = new Blob([BOM + csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `waitlist-export-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Export failed:", error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -125,14 +156,23 @@ export function AdminDashboard() {
                 Admin Dashboard
               </span>
             </div>
-            <form action={logoutAction}>
+            <div className="flex items-center gap-4">
               <button
-                type="submit"
-                className="text-sm text-text-secondary hover:text-text transition-colors"
+                onClick={handleExport}
+                disabled={isExporting}
+                className="text-sm text-primary hover:text-primary/80 transition-colors disabled:opacity-50"
               >
-                Logout
+                {isExporting ? "Exporting..." : "Export CSV"}
               </button>
-            </form>
+              <form action={logoutAction}>
+                <button
+                  type="submit"
+                  className="text-sm text-text-secondary hover:text-text transition-colors"
+                >
+                  Logout
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </header>

@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { waitlistEntries, WaitlistEntry } from "@/db/schema";
-import { desc, ilike, or, eq, sql, count } from "drizzle-orm";
+import { desc, ilike, or, eq, sql, count, asc } from "drizzle-orm";
 import {
   verifyCredentials,
   createSession,
@@ -126,6 +126,18 @@ export async function getWaitlistEntries(
     totalPages,
     currentPage: page,
   };
+}
+
+export async function getAllWaitlistEntries(): Promise<WaitlistEntry[]> {
+  const authenticated = await isAuthenticated();
+  if (!authenticated) return [];
+
+  const entries = await db
+    .select()
+    .from(waitlistEntries)
+    .orderBy(asc(waitlistEntries.id));
+
+  return entries;
 }
 
 export async function getWaitlistStats(): Promise<{
