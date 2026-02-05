@@ -164,7 +164,7 @@ export function WaitlistForm() {
             Submitting...
           </>
         ) : (
-          "Join the Waitlist"
+          "Submit"
         )}
       </button>
     </form>

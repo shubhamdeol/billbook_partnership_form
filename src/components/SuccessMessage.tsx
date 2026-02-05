@@ -10,20 +10,28 @@ export function SuccessMessage() {
       </div>
 
       <h2 className="font-display text-3xl font-bold text-text text-center mb-3">
-        You&apos;re on the list!
+        Request Submitted!
       </h2>
 
       <p className="text-text-secondary text-center max-w-sm">
-        We&apos;ll notify you when CashBook launches. Get ready to simplify your
-        business expenses!
+        Thank you for your interest. Our team will reach out to you shortly to
+        set up your UPI wallet.
       </p>
 
       <div className="mt-8 p-4 bg-primary-light rounded-lg">
         <p className="text-sm text-primary text-center">
-          Share CashBook with other business owners and help them simplify their
-          expenses too!
+          Know a business owner who could benefit from CashBook? Spread the word!
         </p>
       </div>
+
+      <a
+        href="https://cashbook.in"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-6 w-full max-w-xs bg-primary hover:bg-primary/90 text-white font-semibold text-lg py-4 rounded-lg transition-colors duration-200 text-center block"
+      >
+        Visit CashBook
+      </a>
     </div>
   );
 }

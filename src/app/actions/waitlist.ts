@@ -59,18 +59,25 @@ export async function submitWaitlist(
       message: "Successfully joined the waitlist!",
     };
   } catch (error: unknown) {
-    if (
-      error instanceof Error &&
-      error.message.includes("duplicate key value")
-    ) {
-      return {
-        success: false,
-        message: "This phone number is already registered",
-        errors: { phone: ["This phone number is already on the waitlist"] },
-      };
+    console.error("Database error:", error);
+
+    if (error instanceof Error) {
+      if (error.message.includes("duplicate key value")) {
+        return {
+          success: false,
+          message: "This phone number is already registered",
+          errors: { phone: ["This phone number is already on the waitlist"] },
+        };
+      }
+
+      // Log the full error for debugging
+      console.error("Full error details:", {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+      });
     }
 
-    console.error("Database error:", error);
     return {
       success: false,
       message: "Something went wrong. Please try again.",

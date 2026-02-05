@@ -25,16 +25,25 @@ export function StepPhone({ name, value, onChange, error }: StepPhoneProps) {
       </div>
 
       <div className="space-y-2">
-        <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text font-medium text-lg">
-            +91
-          </span>
+        <div
+          className={`flex items-center border rounded-lg overflow-hidden bg-white ${
+            error ? "border-error" : "border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10"
+          }`}
+        >
+          {/* Country code section */}
+          <div className="flex items-center justify-center px-4 min-h-[52px] bg-background border-r border-border">
+            <span className="text-text font-medium text-base whitespace-nowrap">
+              +91
+            </span>
+          </div>
+
+          {/* Phone number input */}
           <input
             type="tel"
             value={value}
             onChange={handleChange}
-            placeholder="Enter 10-digit number"
-            className={`form-input text-lg pl-14 ${error ? "border-error" : ""}`}
+            placeholder="10-digit number"
+            className="flex-1 min-h-[52px] px-4 text-base text-text bg-transparent border-none outline-none placeholder:text-text-secondary"
             autoFocus
             autoComplete="tel"
             inputMode="numeric"

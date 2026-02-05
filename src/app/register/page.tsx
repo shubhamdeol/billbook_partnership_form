@@ -3,9 +3,9 @@ import { ArrowLeft } from "lucide-react";
 import { MultiStepForm } from "@/components/MultiStepForm";
 
 export const metadata = {
-  title: "Join the Waitlist - CashBook",
+  title: "Request UPI Wallet - CashBook",
   description:
-    "Sign up for early access to CashBook, the UPI wallet for business expenses.",
+    "Request your CashBook UPI wallet for business expenses.",
 };
 
 export default function WaitlistPage() {

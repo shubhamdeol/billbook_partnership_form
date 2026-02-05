@@ -37,7 +37,7 @@ export function FeatureShowcase({ onGetStarted }: FeatureShowcaseProps) {
           onClick={onGetStarted}
           className="w-full max-w-xs bg-primary hover:bg-primary/90 text-white font-semibold text-lg px-10 py-4 rounded-lg transition-colors duration-200 shadow-card active:scale-[0.98]"
         >
-          Join the Waitlist
+          Request UPI Wallet
         </button>
       </div>
     </section>
